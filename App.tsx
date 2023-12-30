@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import { useState } from "react";
-import styles from "./app.styles"
+import styles from "./styles"
 import InputWrapper from "./components/InputWrapper/InputWrapper";
 import { removeNonDigitsCharsFromString, convertNumberToStringDecimal, convertToPaceOrSpeed } from "./components/InputWrapper/helpers";
 
@@ -31,19 +31,19 @@ function App() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <InputWrapper
         title={"MIN / KM"}
         value={paceInputValue}
         onChangeText={paceChangeText}
+        autoFocus
       />
-      <StatusBar style="auto" backgroundColor={"white"} />
       <InputWrapper
         title={"KM / H"}
         value={speedInputValue}
         onChangeText={speedChangeText}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

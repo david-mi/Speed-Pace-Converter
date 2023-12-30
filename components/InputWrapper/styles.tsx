@@ -4,22 +4,24 @@ export default StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 20
+    backgroundColor: "white",
+    flexBasis: "50%",
+    flexShrink: 1
   },
   title: {
     fontSize: 30,
     fontWeight: "bold",
-    color: "#F8EDFF"
+    color: "black",
+    backgroundColor: "#FFBB5C",
+    paddingVertical: 20,
+    textAlign: "center"
   },
   input: {
-    backgroundColor: "#F8EDFF",
-    height: 150,
-    width: 200,
-    borderRadius: 10,
+    flex: 1,
     fontSize: 50,
     fontWeight: "600",
-    textAlign: "center"
+    textAlign: "center",
+    marginBottom: "auto",
+    marginTop: "auto",
   }
 })
