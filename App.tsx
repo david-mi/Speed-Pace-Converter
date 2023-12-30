@@ -1,59 +1,48 @@
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, TextInput } from 'react-native';
+import { View } from 'react-native';
 import { useState } from "react";
 import styles from "./app.styles"
+import InputWrapper from "./components/InputWrapper/InputWrapper";
+import { removeNonDigitsCharsFromString, convertNumberToStringDecimal, convertToPaceOrSpeed } from "./components/InputWrapper/helpers";
 
 function App() {
-  const [speedInputValue, setSpeedInputValue] = useState<string>("")
-  const [paceInputValue, setPaceInputValue] = useState<string>("")
+  const MAX_DECIMALS = 2
+  const [speedInputValue, setSpeedInputValue] = useState<string>((0).toFixed(MAX_DECIMALS))
+  const [paceInputValue, setPaceInputValue] = useState<string>((0).toFixed(MAX_DECIMALS))
 
-  function handleSpeedInput(speed: string) {
-    const formattedSpeed = speed.replace(/[^\d\.]/g, "")
-    const speedToNumber = Number(formattedSpeed)
+  function paceChangeText(pace: string) {
+    const formattedPaceInput = removeNonDigitsCharsFromString(pace)
+    const paceToNumber = Number(formattedPaceInput)
 
-    const speedToPaceCalc = speedToNumber > 0
-      ? (60 / speedToNumber).toFixed(2)
-      : "0"
+    const paceToSpeedCalc = convertNumberToStringDecimal(convertToPaceOrSpeed(paceToNumber), MAX_DECIMALS)
 
-    setSpeedInputValue(formattedSpeed)
-    setPaceInputValue(speedToPaceCalc)
-  }
-
-
-  function handlePaceInput(pace: string) {
-    const formattedPace = pace.replace(/[^\d\.]/g, "")
-    const paceToNumber = Number(formattedPace)
-
-    const paceToSpeedCalc = paceToNumber > 0
-      ? (60 / paceToNumber).toFixed(2)
-      : "0"
-
-    setPaceInputValue(formattedPace)
+    setPaceInputValue(formattedPaceInput)
     setSpeedInputValue(paceToSpeedCalc)
   }
 
+  function speedChangeText(speed: string) {
+    const formattedSpeedInput = removeNonDigitsCharsFromString(speed)
+    const speedToNumber = Number(formattedSpeedInput)
+
+    const speedToPaceCalc = convertNumberToStringDecimal(convertToPaceOrSpeed(speedToNumber), MAX_DECIMALS)
+
+    setSpeedInputValue(formattedSpeedInput)
+    setPaceInputValue(speedToPaceCalc)
+  }
+
   return (
-    <View
-      style={styles.container}>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>KM / H</Text>
-        <TextInput
-          keyboardType={"numeric"}
-          style={styles.input}
-          value={speedInputValue}
-          onChangeText={handleSpeedInput}
-        />
-      </View>
+    <View style={styles.container}>
+      <InputWrapper
+        title={"MIN / KM"}
+        value={paceInputValue}
+        onChangeText={paceChangeText}
+      />
       <StatusBar style="auto" backgroundColor={"white"} />
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>MIN / KM</Text>
-        <TextInput
-          keyboardType={"numeric"}
-          style={styles.input}
-          value={paceInputValue}
-          onChangeText={handlePaceInput}
-        />
-      </View>
+      <InputWrapper
+        title={"KM / H"}
+        value={speedInputValue}
+        onChangeText={speedChangeText}
+      />
     </View>
   );
 };
