@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Text, View, TextInput, GestureResponderEvent, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
 import styles from "./styles"
 
@@ -9,19 +9,31 @@ interface Props {
   autoFocus?: boolean
 }
 
+type SelectionOptions = {
+  start: number
+  end: number
+} | null
+
 function InputWrapper({ title, value, onChangeText, autoFocus = false }: Props) {
   const [focused, setFocused] = useState(autoFocus)
-  console.log("input wrapper")
+  const [selectionOptions, setSelectionOptions] = useState<SelectionOptions>({ start: 0, end: value.length })
 
-
-  function onFocus(event: NativeSyntheticEvent<TextInputFocusEventData>) {
+  function onFocus() {
     setFocused(true)
   }
 
-  function onBlur(event: NativeSyntheticEvent<TextInputFocusEventData>) {
+  function onBlur() {
     setFocused(false)
   }
 
+  function handleTouchStart() {
+    setSelectionOptions(null)
+  }
+
+  function onChangeTextHandler(value: string) {
+    onChangeText(value)
+    setSelectionOptions(null)
+  }
 
   return (
     <View style={styles.container}>
@@ -33,13 +45,14 @@ function InputWrapper({ title, value, onChangeText, autoFocus = false }: Props) 
           backgroundColor: focused ? "#ffe8c7" : "white"
         }}
         value={value}
-        onChangeText={onChangeText}
-        defaultValue={"0.00"}
-        selectTextOnFocus
+        onChangeText={onChangeTextHandler}
+        selection={selectionOptions}
+        selectionColor={"#FFBB5C"}
         autoFocus={autoFocus}
-        selectionColor={"transparent"}
+        selectTextOnFocus
         onFocus={onFocus}
         onBlur={onBlur}
+        onTouchStart={handleTouchStart}
       />
     </View>
   );
