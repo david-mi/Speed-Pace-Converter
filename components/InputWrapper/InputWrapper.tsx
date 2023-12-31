@@ -37,12 +37,16 @@ function InputWrapper({ title, value, onChangeText, autoFocus = false }: Props) 
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={{
+        ...styles.title,
+        backgroundColor: focused ? "#ffa527" : "#FFBB5C",
+      }}>{title}</Text>
       <TextInput
         keyboardType={"numeric"}
         style={{
           ...styles.input,
-          backgroundColor: focused ? "#ffe8c7" : "white"
+          backgroundColor: focused ? "#ffe8c7" : "white",
+          fontSize: focused ? 60 : 50
         }}
         value={value}
         onChangeText={onChangeTextHandler}
