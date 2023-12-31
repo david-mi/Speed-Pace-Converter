@@ -3,7 +3,7 @@ import { StatusBar } from "react-native";
 
 export default StyleSheet.create({
   container: {
-    marginTop: StatusBar.currentHeight,
+    // marginTop: StatusBar.currentHeight,
     flex: 1,
   }
 })
