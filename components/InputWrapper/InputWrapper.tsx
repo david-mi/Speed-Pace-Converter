@@ -57,7 +57,7 @@ function InputWrapper({ title, value, onChangeText, autoFocus = false }: Props) 
           value={value}
           onChangeText={onChangeTextHandler}
           selection={selectionOptions}
-          selectionColor={"#FFBB5C"}
+          selectionColor={"transparent"}
           autoFocus={autoFocus}
           selectTextOnFocus
           onFocus={onFocus}
