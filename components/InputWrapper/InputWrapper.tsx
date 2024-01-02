@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Text, View, TextInput, GestureResponderEvent, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
+import { View, TextInput, Animated, Easing } from 'react-native';
 import styles from "./styles"
 
 interface Props {
@@ -17,6 +17,16 @@ type SelectionOptions = {
 function InputWrapper({ title, value, onChangeText, autoFocus = false }: Props) {
   const [focused, setFocused] = useState(autoFocus)
   const [selectionOptions, setSelectionOptions] = useState<SelectionOptions>({ start: 0, end: value.length })
+  const animation = useRef(new Animated.Value(0)).current;
+  const labelBackgroundColor = animation.interpolate(({
+    inputRange: [0, 1],
+    outputRange: ["rgb(255, 165, 39)", "rgb(255, 187, 92)"]
+  }))
+  const inputContainerBackgroundColor = animation.interpolate(({
+    inputRange: [0, 1],
+    outputRange: ["rgb(255, 232, 199)", "rgb(255, 255, 255)"]
+  }))
+  const currentAnimationValue = focused ? 0 : 1
 
   function onFocus() {
     setFocused(true)
@@ -35,29 +45,44 @@ function InputWrapper({ title, value, onChangeText, autoFocus = false }: Props) 
     setSelectionOptions(null)
   }
 
+  useEffect(() => {
+    Animated
+      .timing(animation, {
+        toValue: currentAnimationValue,
+        duration: 400,
+        useNativeDriver: true,
+        easing: Easing.bezier(0, 0, 0.58, 1)
+      })
+      .start(() => animation.setValue(currentAnimationValue))
+  }, [focused])
+
   return (
-    <View style={styles.container}>
-      <Text style={{
-        ...styles.title,
-        backgroundColor: focused ? "#ffa527" : "#FFBB5C",
-      }}>{title}</Text>
-      <TextInput
-        keyboardType={"numeric"}
+    <View style={styles.container} onTouchStart={handleTouchStart}>
+      <Animated.Text
         style={{
-          ...styles.input,
-          backgroundColor: focused ? "#ffe8c7" : "white",
-          fontSize: focused ? 60 : 50
-        }}
-        value={value}
-        onChangeText={onChangeTextHandler}
-        selection={selectionOptions}
-        selectionColor={"#FFBB5C"}
-        autoFocus={autoFocus}
-        selectTextOnFocus
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onTouchStart={handleTouchStart}
-      />
+          ...styles.title,
+          backgroundColor: labelBackgroundColor,
+        }}>
+        {title}
+      </Animated.Text>
+      <Animated.View
+        style={{
+          ...styles.inputContainer,
+          backgroundColor: inputContainerBackgroundColor
+        }}>
+        <TextInput
+          keyboardType={"numeric"}
+          style={styles.input}
+          value={value}
+          onChangeText={onChangeTextHandler}
+          selection={selectionOptions}
+          selectionColor={"#FFBB5C"}
+          autoFocus={autoFocus}
+          selectTextOnFocus
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />
+      </Animated.View>
     </View>
   );
 }

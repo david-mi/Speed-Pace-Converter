@@ -14,12 +14,16 @@ export default StyleSheet.create({
     paddingVertical: 20,
     textAlign: "center"
   },
-  input: {
+  inputContainer: {
     flex: 1,
-    // fontSize: 50,
+
+  },
+  input: {
+    fontSize: 50,
     fontWeight: "600",
     textAlign: "center",
     marginBottom: "auto",
     marginTop: "auto",
+    flex: 1
   }
 })
